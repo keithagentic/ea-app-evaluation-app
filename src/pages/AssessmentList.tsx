@@ -84,6 +84,7 @@ export function AssessmentList() {
   }, [assessments, filters, sortBy, sortOrder]);
 
   const handleAssessmentClick = (assessmentId: string) => {
+    console.log('Handling assessment click for ID:', assessmentId);
     navigate(`/assessments/${assessmentId}`);
   };
 

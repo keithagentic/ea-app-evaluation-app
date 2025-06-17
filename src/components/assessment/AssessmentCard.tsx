@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Assessment } from '../../types';
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -7,10 +8,20 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface AssessmentCardProps {
   assessment: Assessment;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function AssessmentCard({ assessment, onClick }: AssessmentCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(`/assessments/${assessment.id}`);
+    }
+  };
+
   const getStatusBadge = (status: Assessment['status']) => {
     const variants = {
       draft: 'secondary' as const,
@@ -82,13 +93,16 @@ export function AssessmentCard({ assessment, onClick }: AssessmentCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={onClick}>
+    <Card 
+      className="hover:shadow-md transition-all duration-200 cursor-pointer hover:border-primary-300" 
+      onClick={handleClick}
+    >
       <CardContent>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-primary-600 transition-colors">
                   {assessment.application?.name}
                 </h3>
                 <p className="text-sm text-gray-600 line-clamp-2">
@@ -164,6 +178,16 @@ export function AssessmentCard({ assessment, onClick }: AssessmentCardProps) {
                 </div>
               </div>
             )}
+
+            {/* Click indicator */}
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <span>Click to open assessment details</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
